@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PagalWorld Clone</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎧 PagalWorld Clone</h1>
+    <input type="text" id="search" placeholder="Search songs...">
+  </header>
+
+  <div id="songs"></div>
+
+  <script>
+    async function loadSongs() {
+      const res = await fetch('/api/songs');
+      const songs = await res.json();
+      displaySongs(songs);
+    }
+
+    function displaySongs(songs) {
+      const container = document.getElementById('songs');
+      container.innerHTML = "";
+      const keyword = document.getElementById("search").value.toLowerCase();
+
+      songs
+        .filter(song => song.title.toLowerCase().includes(keyword) || song.artist.toLowerCase().includes(keyword))
+        .forEach(song => {
+          const songBox = document.createElement('div');
+          songBox.className = 'song';
+          songBox.innerHTML = `
+            <h3>${song.title} - <span>${song.artist}</span></h3>
+            <p>Category: ${song.category}</p>
+            <audio controls src="${song.url}"></audio>
+            <a href="${song.url}" class="btn" download>⬇️ Download</a>
+          `;
+          container.appendChild(songBox);
+        });
+    }
+
+    document.getElementById('search').addEventListener('input', loadSongs);
+
+    loadSongs();
+  </script>
+</body>
+</html>

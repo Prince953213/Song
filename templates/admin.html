@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎛 Admin Panel</h1>
+  </header>
+
+  <form id="songForm">
+    <input type="text" placeholder="Title" id="title" required />
+    <input type="text" placeholder="Artist" id="artist" required />
+    <input type="text" placeholder="Category" id="category" required />
+    <input type="text" placeholder="MP3 URL" id="url" required />
+    <button type="submit" class="btn">➕ Add Song</button>
+  </form>
+
+  <div id="songs"></div>
+
+  <script>
+    async function loadSongs() {
+      const res = await fetch('/api/songs');
+      const songs = await res.json();
+      const container = document.getElementById('songs');
+      container.innerHTML = "";
+      songs.forEach(song => {
+        const songBox = document.createElement('div');
+        songBox.className = 'song';
+        songBox.innerHTML = `
+          <h3>${song.title} - <span>${song.artist}</span></h3>
+          <p>${song.category}</p>
+          <button class="btn delete-btn" onclick="deleteSong(${song.id})">🗑 Delete</button>
+        `;
+        container.appendChild(songBox);
+      });
+    }
+
+    async function deleteSong(id) {
+      await fetch('/api/songs/' + id, { method: 'DELETE' });
+      loadSongs();
+    }
+
+    document.getElementById('songForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newSong = {
+        title: document.getElementById('title').value,
+        artist: document.getElementById('artist').value,
+        category: document.getElementById('category').value,
+        url: document.getElementById('url').value
+      };
+      await fetch('/api/songs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSong)
+      });
+      e.target.reset();
+      loadSongs();
+    });
+
+    loadSongs();
+  </script>
+</body>
+</html>
