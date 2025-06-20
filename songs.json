@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Lutt Gaye",
+    "artist": "Jubin Nautiyal",
+    "category": "Bollywood",
+    "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  },
+  {
+    "id": 2,
+    "title": "Excuses",
+    "artist": "AP Dhillon",
+    "category": "Punjabi",
+    "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+  }
+]
